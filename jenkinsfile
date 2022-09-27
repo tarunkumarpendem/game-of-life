@@ -18,3 +18,4 @@ node('ubuntu-spc')
     sh '/usr/share/maven/bin/mvn package'
    }
 }
+
