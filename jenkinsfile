@@ -1,21 +1,14 @@
-node('ubuntu-spc')
+node('ubuntu-spc') 
 {
-    stage('java_path')
+    env.PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"
+    stage('clone') 
     {
-    tool name: 'JDK8', type: 'jdk'
+        git credentialsId: 'Ubuntu-Node', 
+            url: 'https://github.com/wakaleo/game-of-life.git',
+            branch: 'master'
     }
-    stage('maven_path')
+    stage('build') 
     {
-    tool name: 'Maven 3.6.3', type: 'maven'
-   }
-   stage('clone') 
-   {
-    git credentialsId: 'Ubuntu-Node', 
-        url: 'https://github.com/tarunkumarpendem/game-of-life.git'
-   }
-   stage('package') 
-   {
-    sh '/usr/share/maven/bin/mvn package'
-   }
+        sh 'mvn package'
+    }
 }
-

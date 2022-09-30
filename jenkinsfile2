@@ -1,0 +1,30 @@
+pipeline
+{
+    agent 
+    { 
+        label 'ubuntu-spc'
+    }
+    stages 
+    {
+        stage('package') 
+        {
+            steps 
+            {
+                git url: 'https://github.com/wakaleo/game-of-life.git', 
+                    branch: 'GOL'
+            }
+        }    
+        stage('build')
+        {   
+            steps
+            {
+               script
+               { 
+                sh '/usr/share/maven/bin/mvn package'
+               }
+            
+            }
+              
+        }
+    }
+}
