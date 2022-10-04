@@ -1,14 +1,22 @@
-node('ubuntu-spc') 
+node('ubuntu') 
 {
     env.PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"
     stage('clone') 
     {
-        git credentialsId: 'Ubuntu-Node', 
-            url: 'https://github.com/wakaleo/game-of-life.git',
-            branch: 'master'
+        git url: 'https://github.com/wakaleo/game-of-life.git',
+            branch: 'GOL'
     }
     stage('build') 
     {
-        sh 'mvn package'
+        sh 'mvn clean package install'
+    }
+    stage('Archivinh_Artifacts')
+    {
+       archiveArtifacts artifacts: '**/target/*.war',
+                        followSymlinks: false
+    }
+    stage('Junit_test_reports')
+    {
+        junit '**/surefire-reports/*.xml'
     }
 }
