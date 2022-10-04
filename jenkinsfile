@@ -8,7 +8,7 @@ node('ubuntu')
     }
     stage('build') 
     {
-        sh 'mvn clean package install'
+        sh 'mvn clean compile package install'
     }
     stage('Archivinh_Artifacts')
     {
