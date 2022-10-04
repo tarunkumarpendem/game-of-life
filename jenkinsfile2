@@ -2,7 +2,7 @@ pipeline
 {
     agent 
     { 
-        label 'ubuntu-spc'
+        label 'ubuntu'
     }
     stages 
     {
@@ -10,7 +10,7 @@ pipeline
         {
             steps 
             {
-                git url: 'https://github.com/wakaleo/game-of-life.git', 
+                git url: 'https://github.com/tarunkumarpendem/game-of-life.git', 
                     branch: 'GOL'
             }
         }    
@@ -20,11 +20,26 @@ pipeline
             {
                script
                { 
-                sh '/usr/share/maven/bin/mvn package'
+                sh '/usr/share/maven/bin/mvn clean compile package test install'
                }
             
             }
               
         }
+        stage('Archiving_artifacts')
+        {
+            steps
+            {
+               archiveArtifacts artifacts: '**/target/*.war'
+            }
+        }
+        stage('Junit_reports')
+        {
+            steps
+            {
+                junit '**/surefire-reports/*.xml'
+            }
+        }
+        
     }
 }
