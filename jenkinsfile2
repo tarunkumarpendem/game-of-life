@@ -20,8 +20,8 @@ pipeline
             {
                script
                { 
-                sh """/usr/share/maven/bin/mvn clean compile package test install,
-                      export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"""
+                sh """export PATH='/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH',
+                      /usr/share/maven/bin/mvn clean compile package test install"""
                }
             
             }
@@ -44,6 +44,8 @@ pipeline
         
     }
 }
+
+
 
 
 
