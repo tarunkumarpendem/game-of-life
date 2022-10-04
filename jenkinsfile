@@ -3,7 +3,7 @@ node('ubuntu')
     env.PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"
     stage('clone') 
     {
-        git url: 'https://github.com/wakaleo/game-of-life.git',
+        git url: 'https://github.com/tarunkumarpendem/game-of-life.git',
             branch: 'GOL'
     }
     stage('build') 
