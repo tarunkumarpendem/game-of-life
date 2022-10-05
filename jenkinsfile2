@@ -10,7 +10,7 @@ pipeline
                choices: ['master', 'GOL'], 
                description: 'choose the branch to build')
         string(name: 'Maven_Goal', 
-               defaultValue: 'staging', 
+               defaultValue: 'package', 
                description: 'select the Maven Goal')
     }
     triggers 
