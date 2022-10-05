@@ -33,7 +33,7 @@ pipeline
             {
                script
                { 
-                sh "mvn ${params.Maven_Goal}"
+                sh "/usr/share/maven/bin/mvn ${params.Maven_Goal}"
                }
             
             }
