@@ -4,6 +4,19 @@ pipeline
     { 
         label 'ubuntu'
     }
+    parameters
+    {
+        choice(name: 'Branch_to_Build', 
+               choices: ['master', 'GOL'], 
+               description: 'choose the branch to build')
+        string(name: 'Maven_Goal', 
+               defaultValue: 'staging', 
+               description: 'select the Maven Goal')
+    }
+    triggers 
+    { 
+        pollSCM('* * * * * ') 
+    }
     stages 
     {
         stage('package') 
@@ -11,7 +24,7 @@ pipeline
             steps 
             {
                 git url: 'https://github.com/tarunkumarpendem/game-of-life.git', 
-                    branch: 'GOL'
+                    branch: "${params.Branch_to_Build}"
             }
         }    
         stage('build')
@@ -21,7 +34,7 @@ pipeline
                script
                { 
                 sh """export PATH='/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH',
-                      /usr/share/maven/bin/mvn clean compile package test install"""
+                      /usr/share/maven/bin/mvn ${params.Maven_Goal}"""
                }
             
             }
