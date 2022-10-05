@@ -33,8 +33,7 @@ pipeline
             {
                script
                { 
-                sh """export PATH='/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH',
-                      /usr/share/maven/bin/mvn ${params.Maven_Goal}"""
+                sh ""mvn ${params.Maven_Goal}""
                }
             
             }
