@@ -26,14 +26,14 @@ pipeline
                 git url: 'https://github.com/tarunkumarpendem/game-of-life.git', 
                     branch: "${params.Branch_to_Build}"
             }
-        }    
+        } 
         stage('build')
         {   
             steps
             {
                script
                { 
-                sh ""mvn ${params.Maven_Goal}""
+                sh "mvn ${params.Maven_Goal}"
                }
             
             }
