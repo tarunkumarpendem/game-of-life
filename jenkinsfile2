@@ -11,11 +11,11 @@ pipeline
                description: 'choose the branch to build')
         string(name: 'Maven_Goal', 
                defaultValue: 'package', 
-               description: 'select the Maven Goal')
+               description: 'Goal to be selected')       
     }
     triggers 
     { 
-        pollSCM('* * * * * ') 
+        pollSCM('* * * * *') 
     }
     stages 
     {
@@ -36,8 +36,7 @@ pipeline
                 sh "/usr/share/maven/bin/mvn ${params.Maven_Goal}"
                }
             
-            }
-              
+            } 
         }
         stage('Archiving_artifacts')
         {
