@@ -4,6 +4,37 @@ pipeline
     { 
         label 'ubuntu'
     }
+    post
+    {
+        always
+        {
+            echo 'Job completed check Yourself if it was a success or not'
+            mail subject: 'Job is completed', 
+                body: """Job's done for $env.JOB_NAME
+                                        $env.BUILD_NUMBER
+                          \n clickhere: $env.BUILD_URL""",
+                to: 'tarunkumarpendem22@gmail.com'
+        }
+        success
+        {
+           mail subject: 'Job is completed successfully', 
+                body: """Job's done for $env.JOB_NAME
+                                        $env.BUILD_NUMBER
+                          \n clickhere: $env.BUILD_URL""",
+                to: 'tarunkumarpendem22@gmail.com' 
+           junit '**/surefire-reports/*.xml'
+           
+        }
+        failure
+        {
+            echo 'You messed up'
+            mail subject: 'You messed up the job again as usual', 
+                body: """Job's done for $env.JOB_NAME
+                                        $env.BUILD_NUMBER
+                          \n clickhere: $env.BUILD_URL""",
+                to: 'tarunkumarpendem22@gmail.com'
+        }
+    }
     parameters
     {
         choice(name: 'Branch_to_Build', 
@@ -12,10 +43,6 @@ pipeline
         string(name: 'Maven_Goal', 
                defaultValue: 'package', 
                description: 'Goal to be selected')       
-    }
-    triggers 
-    { 
-        pollSCM('* * * * *') 
     }
     stages 
     {
@@ -45,14 +72,6 @@ pipeline
                archiveArtifacts artifacts: '**/target/*.war'
             }
         }
-        stage('Junit_reports')
-        {
-            steps
-            {
-                junit '**/surefire-reports/*.xml'
-            }
-        }
-        
     }
 }
 
