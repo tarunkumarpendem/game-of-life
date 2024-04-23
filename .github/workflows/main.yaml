@@ -87,7 +87,7 @@ jobs:
       - name: Set Kubernetes configuration
         run: |
           aws eks list-clusters
-          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eksClusterBeta
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name poc-eks
 
       - name: Deploy 
         run: |
