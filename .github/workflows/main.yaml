@@ -34,7 +34,7 @@ jobs:
     needs: get_environment_name_from_git_ref
     environment: ${{ needs.get_environment_name_from_git_ref.outputs.env }}
     env:
-      IMAGE_NAME: gol-voice-over
+      IMAGE_NAME: tarunkumarpendem/gol-voice-over
       IMAGE_TAG: ${{ needs.get_environment_name_from_git_ref.outputs.image_tag }}
     steps:
       - name: Checkout main repo
@@ -59,7 +59,7 @@ jobs:
   #   needs: [ get_environment_name_from_git_ref, build ]
   #   environment: ${{ needs.get_environment_name_from_git_ref.outputs.env }}
   #   env:
-  #     IMAGE: gol-voice-over:${{ needs.get_environment_name_from_git_ref.outputs.image_tag }}
+  #     IMAGE: tarunkumarpendem/gol-voice-over:${{ needs.get_environment_name_from_git_ref.outputs.image_tag }}
   #   steps:
   #     - name: SCM Checkout
   #       uses: actions/checkout@v2
