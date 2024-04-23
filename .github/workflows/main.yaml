@@ -23,9 +23,9 @@ jobs:
             echo "IMAGE_TAG=${{ github.run_number }}" >> $GITHUB_OUTPUT
           fi
 
-      outputs:
-        env: ${{ steps.setenv.outputs.env }}
-        image_tag: ${{ steps.setenv.outputs.IMAGE_TAG }}
+    outputs:
+      env: ${{ steps.setenv.outputs.env }}
+      image_tag: ${{ steps.setenv.outputs.IMAGE_TAG }}
 
 
   build:
