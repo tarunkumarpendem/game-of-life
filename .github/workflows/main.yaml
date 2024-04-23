@@ -89,6 +89,10 @@ jobs:
           chmod +x get_helm.sh
           ./get_helm.sh
 
+      - name: Set Kubernetes configuration
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eksClusterBeta
+
       - name: Deploy 
         run: |
           helm upgrade --install voice-over ./helm-charts/voice-over --create-namespace -n gol-voice-over-poc -f ./helm-charts/voice-over/values.yaml \
