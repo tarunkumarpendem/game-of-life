@@ -53,24 +53,28 @@ jobs:
         run: docker push $IMAGE_NAME:$IMAGE_TAG
 
 
-  # deploy:
-  #   name: build the docker image and call helm repo
-  #   runs-on: ubuntu-latest
-  #   needs: [ get_environment_name_from_git_ref, build ]
-  #   environment: ${{ needs.get_environment_name_from_git_ref.outputs.env }}
-  #   env:
-  #     IMAGE: tarunkumarpendem/gol-voice-over:${{ needs.get_environment_name_from_git_ref.outputs.image_tag }}
-  #   steps:
-  #     - name: SCM Checkout
-  #       uses: actions/checkout@v2
+  deploy:
+    name: build the docker image and call helm repo
+    runs-on: ubuntu-latest
+    needs: [ get_environment_name_from_git_ref, build ]
+    environment: ${{ needs.get_environment_name_from_git_ref.outputs.env }}
+    env:
+      IMAGE: tarunkumarpendem/gol-voice-over:${{ needs.get_environment_name_from_git_ref.outputs.image_tag }}
+    steps:
+      - name: SCM Checkout
+        uses: actions/checkout@v2
 
-  #     - name: checkout to helm repo
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: tarunkumarpendem/github-actions
-  #         ref: "main"
-  #         token: ${{ secrets.GITHUB_TOKEN }}
-  #         path: ./helm-charts
+      - name: checkout to helm repo
+        uses: actions/checkout@v2
+        with:
+          repository: tarunkumarpendem/github-actions
+          ref: "main"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./helm-charts
+
+      - name: Run Command
+        run: |
+          ls -al ./helm-charts
         
   #     - name: Configure AWS credentials
   #       uses: aws-actions/configure-aws-credentials@v2
@@ -87,7 +91,7 @@ jobs:
 
   #     - name: Deploy 
   #       run: |
-  #         helm upgrade --install voice-over ./helm-charts/voice-over -n voice-over -f ./helm-charts/voice-over/values.yaml \
+  #         helm upgrade --install voice-over ./helm-charts/voice-over -n gol-voice-over-poc -f ./helm-charts/voice-over/values.yaml \
   #         --set image=$IMAGE
 
   
