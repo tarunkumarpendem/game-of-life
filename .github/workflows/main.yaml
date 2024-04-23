@@ -20,6 +20,7 @@ jobs:
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/github-actions" || "${{ github.base_ref }}" == "github-actions" ]]; then
             echo "env=poc" >> $GITHUB_OUTPUT
+          fi
 
 
   call-another-repo:
@@ -29,10 +30,10 @@ jobs:
     environment: ${{ needs.get_environment_name_from_git_ref.outputs.env }}
     steps:
       - name: Checkout main repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout another repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: tarunkumarpendem/github-actions.git
           path: ./terraform
