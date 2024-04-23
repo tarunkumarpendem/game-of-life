@@ -35,7 +35,9 @@ jobs:
       - name: Checkout another repo
         uses: actions/checkout@v2
         with:
-          repository: tarunkumarpendem/github-actions.git
+          repository: tarunkumarpendem/github-actions
+          ref: "main"
+          token: ${{ secrets.GITHUB_TOKEN }
           path: ./terraform
 
       - name: Configure AWS credentials
