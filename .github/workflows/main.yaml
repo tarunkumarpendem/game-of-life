@@ -20,58 +20,109 @@ jobs:
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/github-actions" || "${{ github.base_ref }}" == "github-actions" ]]; then
             echo "env=poc" >> $GITHUB_OUTPUT
+            echo "IMAGE_TAG=${{ github.run_number }}" >> $GITHUB_OUTPUT
           fi
 
 
-  call-another-repo:
-    name: call terraform repo
+  build:
+    name: build the docker image and call helm repo
     runs-on: ubuntu-latest
     needs: get_environment_name_from_git_ref
     environment: ${{ needs.get_environment_name_from_git_ref.outputs.env }}
+    env:
+      IMAGE_NAME: gol-voice-over
+      IMAGE_TAG: ${{ needs.get_env_name.outputs.image_tag }}
     steps:
       - name: Checkout main repo
         uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: "${{ secrets.DOCKER_REGISTRY_USERNAME }}"
+          password: "${{ secrets.DOCKER_REGISTRY_PASSWORD }}"
+
+      - name: Build image
+        run: docker build -t $IMAGE_NAME:$IMAGE_TAG .
+
+      - name: Push image
+        run: docker push $IMAGE_NAME:$IMAGE_TAG
+
+
+  # deploy:
+  #   name: build the docker image and call helm repo
+  #   runs-on: ubuntu-latest
+  #   needs: [ get_environment_name_from_git_ref, build ]
+  #   environment: ${{ needs.get_environment_name_from_git_ref.outputs.env }}
+  #   env:
+  #     IMAGE: gol-voice-over:${{ needs.get_env_name.outputs.image_tag }}
+  #   steps:
+  #     - name: SCM Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: checkout to helm repo
+  #       uses: actions/checkout@v2
+  #       with:
+  #         repository: tarunkumarpendem/github-actions
+  #         ref: "main"
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         path: ./helm-charts
+        
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+
+  #     - name: Install Helm
+  #       run: |
+  #         curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+  #         chmod +x get_helm.sh
+  #         ./get_helm.sh
+
+  #     - name: Deploy 
+  #       run: |
+  #         helm upgrade --install voice-over ./helm-charts/voice-over -n voice-over -f ./helm-charts/voice-over/values.yaml \
+  #         --set image=$IMAGE
+
+  
+
+
       
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Checkout another repo
-        uses: actions/checkout@v2
-        with:
-          repository: tarunkumarpendem/github-actions
-          ref: "main"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: ./terraform
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: "Terraform Environment SetUp"
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.8.1
+      # - name: "Terraform Environment SetUp"
+      #   uses: hashicorp/setup-terraform@v2
+      #   with:
+      #     terraform_version: 1.8.1
 
-      - name: "Terraform init"
-        id: init
-        run: |
-          cd terraform
-          terraform init
+      # - name: "Terraform init"
+      #   id: init
+      #   run: |
+      #     cd terraform
+      #     terraform init
 
-      - name: "Validate terraform template"
-        id: validate
-        run: |
-          cd terraform
-          terraform validate
+      # - name: "Validate terraform template"
+      #   id: validate
+      #   run: |
+      #     cd terraform
+      #     terraform validate
 
-      - name: "Terraform plan"
-        id: plan
-        run: |
-          cd terraform
-          terraform plan
+      # - name: "Terraform plan"
+      #   id: plan
+      #   run: |
+      #     cd terraform
+      #     terraform plan
 
-      - name: "Terraform apply"
-        id: apply
-        run: |
-          cd terraform
-          terraform apply -auto-approve $planfile
+      # - name: "Terraform apply"
+      #   id: apply
+      #   run: |
+      #     cd terraform
+      #     terraform apply -auto-approve $planfile
